@@ -1,6 +1,7 @@
 package cz.davidos.Crypto.model;
 
 import lombok.Data;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -19,5 +20,9 @@ public class Crypto {
         this.symbol = symbol;
         this.price = ;
         this.quantity = quantity;
+    }
+    private BigDecimal currentPrice(String symbol){
+        RestTemplate template = new RestTemplate();
+
     }
 }
