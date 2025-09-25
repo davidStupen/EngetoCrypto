@@ -80,6 +80,7 @@ public class CryptoService {
             postStatus.setErr("symbol musí obsahovat BTC nebo ETH nebo SOL nebo DOGE");
             return new ResponseEntity<>(postStatus, HttpStatus.NOT_FOUND);
         }
+        this.addCrypto(crypto);
         return new ResponseEntity<>(postStatus, HttpStatus.OK);
     }
 }
