@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -56,8 +57,23 @@ public class CryptoController {
         }
     }
     @PutMapping("/{id}")
-    public void updateCrypto(@RequestBody Crypto crypto, @PathVariable UUID id){
+    public ResponseEntity<HttpStat> updateCrypto(@Valid @RequestBody Crypto crypto, @PathVariable UUID id, BindingResult result){
+        if (result.hasErrors()){
+            String error = result.getFieldError().getDefaultMessage();
+            HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity(), error);
+            return new ResponseEntity<>(httpStat, HttpStatus.BAD_REQUEST);
+        }
+        if (!crypto.getSymbol().equalsIgnoreCase("BTC") && 
+                !crypto.getSymbol().equalsIgnoreCase("ETH") &&
+                !crypto.getSymbol().equalsIgnoreCase("SOL") &&
+                !crypto.getSymbol().equalsIgnoreCase("DOGE")){
+            String err = "symbol musí obsahovat BTC nebo ETH nebo SOL nebo DOGE. Jiná možnost není možna. Nebylo uloženo! Není povoleno: " + crypto.getSymbol();
+            HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity(), err);
+            return new ResponseEntity<>(httpStat, HttpStatus.BAD_REQUEST);
+        }
         this.service.updateCrypto(id, crypto);
+        HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
+        return new ResponseEntity<>(httpStat, HttpStatus.OK);
     }
     @GetMapping("/portfolio-value")
     public BigDecimal getTotalValue(){
