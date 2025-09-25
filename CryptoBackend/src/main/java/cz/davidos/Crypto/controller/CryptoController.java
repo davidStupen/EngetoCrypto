@@ -26,13 +26,13 @@ public class CryptoController {
     @PostMapping
     public ResponseEntity<PostStatus> addCrypto(@Valid @RequestBody Crypto crypto, BindingResult result){
         PostStatus postStatus = new PostStatus(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             String error = result.getFieldError().getDefaultMessage();
-            PostStatus postStatus = new PostStatus(crypto.getName(), crypto.getSymbol(), crypto.getQuantity(), error);
+            postStatus.setErr(error);
             return new ResponseEntity<>(postStatus, HttpStatus.UNAUTHORIZED);
         }
-
         this.service.addCrypto(crypto);
+        return new ResponseEntity<>(postStatus, HttpStatus.OK);
     }
     @GetMapping
     public List<Crypto> getAllCryptos(@RequestParam(required = false) String sort){

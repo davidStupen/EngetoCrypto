@@ -6,4 +6,15 @@ public class PostStatus extends Crypto{
         super(name, symbol, quantity);
         this.err = err;
     }
+    public PostStatus(String name, String symbol, double quantity) {
+        super(name, symbol, quantity);
+    }
+
+    public String getErr() {
+        return err;
+    }
+
+    public void setErr(String err) {
+        this.err = err;
+    }
 }
