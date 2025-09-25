@@ -1,5 +1,6 @@
 package cz.davidos.Crypto.controller;
 
+import cz.davidos.Crypto.exception.NotFind;
 import cz.davidos.Crypto.model.Crypto;
 import cz.davidos.Crypto.model.HttpStatus;
 import cz.davidos.Crypto.service.CryptoService;
@@ -43,8 +44,14 @@ public class CryptoController {
         };
     }
     @GetMapping("/{id}")
-    public Crypto getCrypto(@PathVariable UUID id){
-        return this.service.getCryptoById(id);
+    public ResponseEntity<HttpStatus> getCrypto(@PathVariable UUID id){
+        try {
+            Crypto crypto = this.service.getCryptoById(id);
+            HttpStatus httpStatus = new HttpStatus(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
+            return new ResponseEntity<>(httpStatus, org.springframework.http.HttpStatus.OK);
+        } catch (NotFind e) {
+            throw ;
+        }
     }
     @PutMapping("/{id}")
     public void updateCrypto(@RequestBody Crypto crypto, @PathVariable UUID id){
