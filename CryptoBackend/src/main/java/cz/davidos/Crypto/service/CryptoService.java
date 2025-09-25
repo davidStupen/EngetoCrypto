@@ -1,6 +1,9 @@
 package cz.davidos.Crypto.service;
 
 import cz.davidos.Crypto.model.Crypto;
+import cz.davidos.Crypto.model.PostStatus;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -67,5 +70,16 @@ public class CryptoService {
             value = value.add(BigDecimal.valueOf(item.getQuantity()).multiply(item.getPrice()));
         }
         return value;
+    }
+
+    public ResponseEntity<PostStatus> getException(Crypto crypto, PostStatus postStatus){
+        if (!crypto.getSymbol().equalsIgnoreCase("BTC") &&
+                !crypto.getSymbol().equalsIgnoreCase("ETH") &&
+                !crypto.getSymbol().equalsIgnoreCase("SOL") &&
+                !crypto.getSymbol().equalsIgnoreCase("DOGE")){
+            postStatus.setErr("symbol musí obsahovat BTC nebo ETH nebo SOL nebo DOGE");
+            return new ResponseEntity<>(postStatus, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(postStatus, HttpStatus.OK);
     }
 }
