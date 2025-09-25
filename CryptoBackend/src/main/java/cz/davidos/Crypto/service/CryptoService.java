@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CryptoService {
@@ -43,5 +44,10 @@ public class CryptoService {
         };
         this.cryptoList.sort(com);
         return this.cryptoList;
+    }
+
+    public Crypto getCryptoById(UUID id) {
+        return this.cryptoList.stream().filter(item -> item.getId() == id)
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("nenalezeno podle id " + id));
     }
 }
