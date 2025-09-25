@@ -5,6 +5,7 @@ import cz.davidos.Crypto.service.CryptoService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -29,5 +30,9 @@ public class CryptoController {
             case null -> this.service.getAllCryptos();
             default -> this.service.getAllCryptos();
         };
+    }
+    @GetMapping("/{id}")
+    public Crypto getCrypto(@PathVariable UUID id){
+        return this.service.getCryptoById(id);
     }
 }
