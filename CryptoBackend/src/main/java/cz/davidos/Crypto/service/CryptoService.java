@@ -50,4 +50,13 @@ public class CryptoService {
         return this.cryptoList.stream().filter(item -> item.getId().equals(id))
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("nenalezeno podle id " + id));
     }
+
+    public void updateCrypto(UUID id, Crypto crypto) {
+        for (int i = 0; i < this.cryptoList.size(); i++) {
+            if (this.cryptoList.get(i).getId().equals(id)) {
+                this.cryptoList.set(i, new Crypto(crypto.getName(), crypto.getSymbol(), crypto.getQuantity()));
+                break;
+            }
+        }
+    }
 }
