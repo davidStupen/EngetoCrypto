@@ -1,7 +1,12 @@
 package cz.davidos.Crypto.controller;
 
 import cz.davidos.Crypto.model.Crypto;
+import cz.davidos.Crypto.model.PostStatus;
 import cz.davidos.Crypto.service.CryptoService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -19,7 +24,11 @@ public class CryptoController {
     }
 
     @PostMapping
-    public void addCrypto(@RequestBody Crypto crypto){
+    public void addCrypto(@Valid @RequestBody Crypto crypto, BindingResult result){
+        if (result.hasErrors()){
+            String error = result.getFieldError().getDefaultMessage();
+            System.out.println(error);
+        }
         this.service.addCrypto(crypto);
     }
     @GetMapping
