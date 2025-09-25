@@ -63,7 +63,7 @@ public class CryptoController {
             HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity(), error);
             return new ResponseEntity<>(httpStat, HttpStatus.BAD_REQUEST);
         }
-        if (!crypto.getSymbol().equalsIgnoreCase("BTC") && 
+        if (!crypto.getSymbol().equalsIgnoreCase("BTC") &&
                 !crypto.getSymbol().equalsIgnoreCase("ETH") &&
                 !crypto.getSymbol().equalsIgnoreCase("SOL") &&
                 !crypto.getSymbol().equalsIgnoreCase("DOGE")){
