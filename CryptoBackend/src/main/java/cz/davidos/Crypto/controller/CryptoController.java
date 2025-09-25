@@ -1,8 +1,10 @@
 package cz.davidos.Crypto.controller;
 
 import cz.davidos.Crypto.exception.NotFind;
+import cz.davidos.Crypto.exception.TotalValue;
 import cz.davidos.Crypto.model.Crypto;
 import cz.davidos.Crypto.model.HttpStat;
+import cz.davidos.Crypto.model.TotalValueDTO;
 import cz.davidos.Crypto.service.CryptoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -76,7 +78,12 @@ public class CryptoController {
         return new ResponseEntity<>(httpStat, HttpStatus.OK);
     }
     @GetMapping("/portfolio-value")
-    public BigDecimal getTotalValue(){
-        return this.service.countTotalValue();
+    public TotalValueDTO getTotalValue(){
+        try {
+            BigDecimal totalValue = this.service.countTotalValue();
+            return new TotalValueDTO("", totalValue);
+        } catch (TotalValue e) {
+            return new TotalValueDTO(e.getMessage());
+        }
     }
 }
