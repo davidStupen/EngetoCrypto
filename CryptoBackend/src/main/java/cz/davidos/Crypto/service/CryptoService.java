@@ -1,6 +1,7 @@
 package cz.davidos.Crypto.service;
 
 import cz.davidos.Crypto.exception.NotFind;
+import cz.davidos.Crypto.exception.TotalValue;
 import cz.davidos.Crypto.model.Crypto;
 import cz.davidos.Crypto.model.HttpStat;
 import org.springframework.http.ResponseEntity;
@@ -80,7 +81,8 @@ public class CryptoService {
         }
     }
 
-    public BigDecimal countTotalValue() {
+    public BigDecimal countTotalValue() throws TotalValue {
+        if (this.cryptoList.isEmpty()) throw new TotalValue("Tvoje portfolio je zatím prázdné!");
         BigDecimal value = BigDecimal.valueOf(0);
         for (Crypto item : this.cryptoList){
             value = value.add(BigDecimal.valueOf(item.getQuantity()).multiply(item.getPrice()));
