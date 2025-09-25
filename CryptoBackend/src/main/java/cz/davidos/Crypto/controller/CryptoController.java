@@ -4,6 +4,7 @@ import cz.davidos.Crypto.model.Crypto;
 import cz.davidos.Crypto.service.CryptoService;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,7 +41,7 @@ public class CryptoController {
         this.service.updateCrypto(id, crypto);
     }
     @GetMapping("/portfolio-value")
-    public double getTotalValue(){
+    public BigDecimal getTotalValue(){
         return this.service.countTotalValue();
     }
 }

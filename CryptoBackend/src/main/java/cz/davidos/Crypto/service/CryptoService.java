@@ -3,6 +3,7 @@ package cz.davidos.Crypto.service;
 import cz.davidos.Crypto.model.Crypto;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -58,5 +59,13 @@ public class CryptoService {
                 break;
             }
         }
+    }
+
+    public BigDecimal countTotalValue() {
+        BigDecimal value = BigDecimal.valueOf(0);
+        for (Crypto item : this.cryptoList){
+            value = value.add(BigDecimal.valueOf(item.getQuantity()).multiply(item.getPrice()));
+        }
+        return value;
     }
 }
