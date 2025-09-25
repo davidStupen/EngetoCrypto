@@ -5,6 +5,7 @@ import cz.davidos.Crypto.model.Crypto;
 import cz.davidos.Crypto.model.HttpStat;
 import cz.davidos.Crypto.service.CryptoService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -48,9 +49,10 @@ public class CryptoController {
         try {
             Crypto crypto = this.service.getCryptoById(id);
             HttpStat httpStatus = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
-            return new ResponseEntity<>(httpStatus, org.springframework.http.HttpStatus.OK);
+            return new ResponseEntity<>(httpStatus, HttpStatus.OK);
         } catch (NotFind e) {
-            throw ;
+            HttpStat httpStatus = new HttpStat(null, null, -1, e.getMessage());
+            return new ResponseEntity<>(httpStatus, HttpStatus.NOT_FOUND);
         }
     }
     @PutMapping("/{id}")
