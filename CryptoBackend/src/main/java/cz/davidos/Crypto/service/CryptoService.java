@@ -16,12 +16,26 @@ import java.util.UUID;
 public class CryptoService {
     List<Crypto> cryptoList = new ArrayList<>();
 
-    public void addCrypto(Crypto crypto){
+    public ResponseEntity<PostStatus> saveOrExeption(Crypto crypto, PostStatus postStatus){
+        if (!crypto.getSymbol().equalsIgnoreCase("BTC") &&
+                !crypto.getSymbol().equalsIgnoreCase("ETH") &&
+                !crypto.getSymbol().equalsIgnoreCase("SOL") &&
+                !crypto.getSymbol().equalsIgnoreCase("DOGE")){
+            postStatus.setErr("symbol musí obsahovat BTC nebo ETH nebo SOL nebo DOGE");
+            return new ResponseEntity<>(postStatus, HttpStatus.NOT_FOUND);
+        }
+        this.addCrypto(crypto);
+        return new ResponseEntity<>(postStatus, HttpStatus.OK);
+    }
+
+    private void addCrypto(Crypto crypto){
         this.cryptoList.add(new Crypto(crypto.getName(), crypto.getSymbol(), crypto.getQuantity()));
     }
+
     public List<Crypto> getAllCryptos(){
         return this.cryptoList;
     }
+
     public List<Crypto> sortByPrice(){
         Comparator<Crypto> com = (o1, o2) -> {
             if (o1.getPrice().doubleValue() > o2.getPrice().doubleValue()) return 1;
@@ -31,6 +45,7 @@ public class CryptoService {
         this.cryptoList.sort(com);
         return this.cryptoList;
     }
+
     public List<Crypto> sortByName(){
         Comparator<Crypto> com = (o1, o2) -> {
             if (o1.getName().compareTo(o2.getName()) > 0) return 1;
@@ -40,6 +55,7 @@ public class CryptoService {
         this.cryptoList.sort(com);
         return this.cryptoList;
     }
+
     public List<Crypto> sortByQuantity(){
         Comparator<Crypto> com = (o1, o2) -> {
             if (o1.getQuantity() > o2.getQuantity()) return 1;
@@ -72,15 +88,4 @@ public class CryptoService {
         return value;
     }
 
-    public ResponseEntity<PostStatus> getException(Crypto crypto, PostStatus postStatus){
-        if (!crypto.getSymbol().equalsIgnoreCase("BTC") &&
-                !crypto.getSymbol().equalsIgnoreCase("ETH") &&
-                !crypto.getSymbol().equalsIgnoreCase("SOL") &&
-                !crypto.getSymbol().equalsIgnoreCase("DOGE")){
-            postStatus.setErr("symbol musí obsahovat BTC nebo ETH nebo SOL nebo DOGE");
-            return new ResponseEntity<>(postStatus, HttpStatus.NOT_FOUND);
-        }
-        this.addCrypto(crypto);
-        return new ResponseEntity<>(postStatus, HttpStatus.OK);
-    }
 }
