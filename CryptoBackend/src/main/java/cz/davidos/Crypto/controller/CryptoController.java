@@ -21,7 +21,13 @@ public class CryptoController {
         this.service.addCrypto(crypto);
     }
     @GetMapping
-    public List<Crypto> getAllCryptos(){
-        return this.service.getAllCryptos();
+    public List<Crypto> getAllCryptos(@RequestParam String sort){
+        return switch (sort.toLowerCase()){
+            case "price" -> this.service.sortByPrice();
+            case "name" -> this.service.sortByName();
+            case "quantity" -> this.service.sortByQuantity();
+            case null -> this.service.getAllCryptos();
+            default -> this.service.getAllCryptos();
+        };
     }
 }
