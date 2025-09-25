@@ -31,6 +31,7 @@ public class Crypto {
         this.quantity = quantity;
     }
     private BigDecimal currentPrice(String symbol){
+        if (symbol == null) return BigDecimal.valueOf(-1);
         final String URL_ETH = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd";
         final String URL_BTC = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd";
         final String URL_SOL = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
