@@ -39,7 +39,7 @@ public class CryptoService {
     public List<Crypto> sortByQuantity(){
         Comparator<Crypto> com = (o1, o2) -> {
             if (o1.getQuantity() > o2.getQuantity()) return 1;
-            if (o2.getQuantity() < o2.getQuantity()) return -1;
+            if (o1.getQuantity() < o2.getQuantity()) return -1;
             return 0;
         };
         this.cryptoList.sort(com);
