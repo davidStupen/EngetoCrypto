@@ -21,7 +21,7 @@ public class CryptoService {
                 !crypto.getSymbol().equalsIgnoreCase("ETH") &&
                 !crypto.getSymbol().equalsIgnoreCase("SOL") &&
                 !crypto.getSymbol().equalsIgnoreCase("DOGE")){
-            postStatus.setErr("symbol musí obsahovat BTC nebo ETH nebo SOL nebo DOGE. Jiná možnost není možna. Nebylo uloženo!");
+            postStatus.setErr("symbol musí obsahovat BTC nebo ETH nebo SOL nebo DOGE. Jiná možnost není možna. Nebylo uloženo! Není povoleno: " + crypto.getSymbol());
             return new ResponseEntity<>(postStatus, HttpStatus.BAD_REQUEST);
         }
         this.addCrypto(crypto);
