@@ -2,7 +2,7 @@ package cz.davidos.Crypto.controller;
 
 import cz.davidos.Crypto.exception.NotFind;
 import cz.davidos.Crypto.model.Crypto;
-import cz.davidos.Crypto.model.HttpStatus;
+import cz.davidos.Crypto.model.HttpStat;
 import cz.davidos.Crypto.service.CryptoService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +24,8 @@ public class CryptoController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> addCrypto(@Valid @RequestBody Crypto crypto, BindingResult result){
-        HttpStatus postStatus = new HttpStatus(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
+    public ResponseEntity<HttpStat> addCrypto(@Valid @RequestBody Crypto crypto, BindingResult result){
+        HttpStat postStatus = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
         if (result.hasErrors()) {
             String error = result.getFieldError().getDefaultMessage();
             postStatus.setErr(error);
@@ -44,10 +44,10 @@ public class CryptoController {
         };
     }
     @GetMapping("/{id}")
-    public ResponseEntity<HttpStatus> getCrypto(@PathVariable UUID id){
+    public ResponseEntity<HttpStat> getCrypto(@PathVariable UUID id){
         try {
             Crypto crypto = this.service.getCryptoById(id);
-            HttpStatus httpStatus = new HttpStatus(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
+            HttpStat httpStatus = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
             return new ResponseEntity<>(httpStatus, org.springframework.http.HttpStatus.OK);
         } catch (NotFind e) {
             throw ;

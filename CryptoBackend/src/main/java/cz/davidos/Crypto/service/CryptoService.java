@@ -2,7 +2,7 @@ package cz.davidos.Crypto.service;
 
 import cz.davidos.Crypto.exception.NotFind;
 import cz.davidos.Crypto.model.Crypto;
-import cz.davidos.Crypto.model.HttpStatus;
+import cz.davidos.Crypto.model.HttpStat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class CryptoService {
     List<Crypto> cryptoList = new ArrayList<>();
 
-    public ResponseEntity<HttpStatus> saveOrException(Crypto crypto, HttpStatus postStatus){
+    public ResponseEntity<HttpStat> saveOrException(Crypto crypto, HttpStat postStatus){
         if (!crypto.getSymbol().equalsIgnoreCase("BTC") &&
                 !crypto.getSymbol().equalsIgnoreCase("ETH") &&
                 !crypto.getSymbol().equalsIgnoreCase("SOL") &&
