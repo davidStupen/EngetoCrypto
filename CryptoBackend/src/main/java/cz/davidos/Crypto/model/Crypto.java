@@ -13,5 +13,11 @@ public class Crypto {
     private BigDecimal price;
     private double quantity;
 
-    
+    public Crypto(String name, String symbol, double quantity) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.symbol = symbol;
+        this.price = ;
+        this.quantity = quantity;
+    }
 }
