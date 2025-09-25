@@ -13,5 +13,7 @@ public class CryptoService {
     public void addCrypto(Crypto crypto){
         this.cryptoList.add(new Crypto(crypto.getName(), crypto.getSymbol(), crypto.getQuantity()));
     }
-
+    public List<Crypto> getAllCryptos(){
+        return this.cryptoList;
+    }
 }
