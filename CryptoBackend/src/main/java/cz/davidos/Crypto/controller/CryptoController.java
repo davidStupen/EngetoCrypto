@@ -39,4 +39,8 @@ public class CryptoController {
     public void updateCrypto(@RequestBody Crypto crypto, @PathVariable UUID id){
         this.service.updateCrypto(id, crypto);
     }
+    @GetMapping("/portfolio-value")
+    public double getTotalValue(){
+        return this.service.countTotalValue();
+    }
 }
