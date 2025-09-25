@@ -2,8 +2,7 @@ package cz.davidos.Crypto.service;
 
 import cz.davidos.Crypto.exception.NotFind;
 import cz.davidos.Crypto.model.Crypto;
-import cz.davidos.Crypto.model.PostStatus;
-import org.springframework.http.HttpStatus;
+import cz.davidos.Crypto.model.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +16,16 @@ import java.util.UUID;
 public class CryptoService {
     List<Crypto> cryptoList = new ArrayList<>();
 
-    public ResponseEntity<PostStatus> saveOrException(Crypto crypto, PostStatus postStatus){
+    public ResponseEntity<HttpStatus> saveOrException(Crypto crypto, HttpStatus postStatus){
         if (!crypto.getSymbol().equalsIgnoreCase("BTC") &&
                 !crypto.getSymbol().equalsIgnoreCase("ETH") &&
                 !crypto.getSymbol().equalsIgnoreCase("SOL") &&
                 !crypto.getSymbol().equalsIgnoreCase("DOGE")){
             postStatus.setErr("symbol musí obsahovat BTC nebo ETH nebo SOL nebo DOGE. Jiná možnost není možna. Nebylo uloženo! Není povoleno: " + crypto.getSymbol());
-            return new ResponseEntity<>(postStatus, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(postStatus, org.springframework.http.HttpStatus.BAD_REQUEST);
         }
         this.addCrypto(crypto);
-        return new ResponseEntity<>(postStatus, HttpStatus.OK);
+        return new ResponseEntity<>(postStatus, org.springframework.http.HttpStatus.OK);
     }
 
     private void addCrypto(Crypto crypto){

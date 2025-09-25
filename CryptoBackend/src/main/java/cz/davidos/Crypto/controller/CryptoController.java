@@ -1,10 +1,9 @@
 package cz.davidos.Crypto.controller;
 
 import cz.davidos.Crypto.model.Crypto;
-import cz.davidos.Crypto.model.PostStatus;
+import cz.davidos.Crypto.model.HttpStatus;
 import cz.davidos.Crypto.service.CryptoService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +23,12 @@ public class CryptoController {
     }
 
     @PostMapping
-    public ResponseEntity<PostStatus> addCrypto(@Valid @RequestBody Crypto crypto, BindingResult result){
-        PostStatus postStatus = new PostStatus(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
+    public ResponseEntity<HttpStatus> addCrypto(@Valid @RequestBody Crypto crypto, BindingResult result){
+        HttpStatus postStatus = new HttpStatus(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
         if (result.hasErrors()) {
             String error = result.getFieldError().getDefaultMessage();
             postStatus.setErr(error);
-            return new ResponseEntity<>(postStatus, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(postStatus, org.springframework.http.HttpStatus.BAD_REQUEST);
         }
         return this.service.saveOrException(crypto, postStatus); //interaguje i s listem Crypto, pokud je vše v pořádku.
     }
