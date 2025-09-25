@@ -31,7 +31,7 @@ public class CryptoController {
             postStatus.setErr(error);
             return new ResponseEntity<>(postStatus, HttpStatus.UNAUTHORIZED);
         }
-        return this.service.getException(crypto, postStatus); //interaguje i listem Crypto, pokud je vše v pořádku.
+        return this.service.saveOrExeption(crypto, postStatus); //interaguje i listem Crypto, pokud je vše v pořádku.
     }
     @GetMapping
     public List<Crypto> getAllCryptos(@RequestParam(required = false) String sort){
