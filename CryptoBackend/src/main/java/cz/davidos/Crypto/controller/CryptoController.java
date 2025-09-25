@@ -29,11 +29,11 @@ public class CryptoController {
         if (result.hasErrors()) {
             String error = result.getFieldError().getDefaultMessage();
             postStatus.setErr(error);
-            return new ResponseEntity<>(postStatus, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(postStatus, HttpStatus.BAD_REQUEST);
         }
-        return this.service.saveOrException(crypto, postStatus); //interaguje i listem Crypto, pokud je vše v pořádku.
+        return this.service.saveOrException(crypto, postStatus); //interaguje i s listem Crypto, pokud je vše v pořádku.
     }
-    @GetMapping
+    @GetMapping({"", "/"})
     public List<Crypto> getAllCryptos(@RequestParam(required = false) String sort){
         return switch (sort){
             case null -> this.service.getAllCryptos();
