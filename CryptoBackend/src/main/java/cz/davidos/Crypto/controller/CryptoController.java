@@ -35,4 +35,8 @@ public class CryptoController {
     public Crypto getCrypto(@PathVariable UUID id){
         return this.service.getCryptoById(id);
     }
+    @PutMapping("/{id}")
+    public void updateCrypto(@RequestBody Crypto crypto, @PathVariable UUID id){
+        this.service.updateCrypto(id, crypto);
+    }
 }
