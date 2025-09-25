@@ -1,5 +1,6 @@
 package cz.davidos.Crypto.service;
 
+import cz.davidos.Crypto.exception.NotFind;
 import cz.davidos.Crypto.model.Crypto;
 import cz.davidos.Crypto.model.PostStatus;
 import org.springframework.http.HttpStatus;
@@ -66,9 +67,9 @@ public class CryptoService {
         return this.cryptoList;
     }
 
-    public Crypto getCryptoById(UUID id) {
+    public Crypto getCryptoById(UUID id) throws NotFind {
         return this.cryptoList.stream().filter(item -> item.getId().equals(id))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("nenalezeno podle id " + id));
+                .findFirst().orElseThrow(() -> new NotFind("nenalezeno id " + id));
     }
 
     public void updateCrypto(UUID id, Crypto crypto) {
