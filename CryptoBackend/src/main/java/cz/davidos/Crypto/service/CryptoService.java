@@ -47,7 +47,7 @@ public class CryptoService {
     }
 
     public Crypto getCryptoById(UUID id) {
-        return this.cryptoList.stream().filter(item -> item.getId() == id)
+        return this.cryptoList.stream().filter(item -> item.getId().equals(id))
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("nenalezeno podle id " + id));
     }
 }
