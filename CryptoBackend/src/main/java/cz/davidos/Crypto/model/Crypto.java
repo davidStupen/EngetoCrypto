@@ -1,8 +1,9 @@
 package cz.davidos.Crypto.model;
 
 import cz.davidos.Crypto.model.bitcoin.BitcoinDTO;
-import cz.davidos.Crypto.model.ethereum.Ethereum;
 import cz.davidos.Crypto.model.ethereum.EthereumDTO;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import org.springframework.web.client.RestTemplate;
 
@@ -12,9 +13,12 @@ import java.util.UUID;
 @Data
 public class Crypto {
     private UUID id;
+    @NotEmpty(message = "jmeno je povinný")
     private String name;
+    @NotEmpty(message = "symbol je povinný")
     private String symbol;
     private BigDecimal price;
+    @Min(value = 0, message = "hodnota nesmí být záporná")
     private double quantity;
 
     public Crypto(String name, String symbol, double quantity) {
