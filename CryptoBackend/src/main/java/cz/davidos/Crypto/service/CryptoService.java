@@ -26,4 +26,13 @@ public class CryptoService {
         this.cryptoList.sort(com);
         return this.cryptoList;
     }
+    public List<Crypto> sortByName(){
+        Comparator<Crypto> com = (o1, o2) -> {
+            if (o1.getName().compareTo(o2.getName()) > 0) return 1;
+            if (o1.getName().compareTo(o2.getName()) < 0) return -1;
+            return 0;
+        };
+        this.cryptoList.sort(com);
+        return this.cryptoList;
+    }
 }
