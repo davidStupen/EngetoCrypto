@@ -24,11 +24,14 @@ public class CryptoController {
     }
 
     @PostMapping
-    public void addCrypto(@Valid @RequestBody Crypto crypto, BindingResult result){
+    public ResponseEntity<PostStatus> addCrypto(@Valid @RequestBody Crypto crypto, BindingResult result){
+        PostStatus postStatus = new PostStatus(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
         if (result.hasErrors()){
             String error = result.getFieldError().getDefaultMessage();
-            System.out.println(error);
+            PostStatus postStatus = new PostStatus(crypto.getName(), crypto.getSymbol(), crypto.getQuantity(), error);
+            return new ResponseEntity<>(postStatus, HttpStatus.UNAUTHORIZED);
         }
+
         this.service.addCrypto(crypto);
     }
     @GetMapping
