@@ -91,6 +91,7 @@ public class CryptoService {
         for (int i = 0; i < this.cryptoList.size(); i++){
             if (this.cryptoList.get(i).getId().equals(id)){
                 this.cryptoList.set(i, new Crypto(crypto.getName().toLowerCase(), crypto.getSymbol(), crypto.getQuantity()));
+                break;
             }
         }
         HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
