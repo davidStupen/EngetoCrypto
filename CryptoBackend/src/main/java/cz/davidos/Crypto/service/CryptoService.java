@@ -26,6 +26,7 @@ public class CryptoService {
             postStatus.setErr("symbol musí obsahovat BTC nebo ETH nebo SOL nebo DOGE. Jiná možnost není možna. Nebylo uloženo! Není povoleno: " + crypto.getSymbol());
             return new ResponseEntity<>(postStatus, org.springframework.http.HttpStatus.BAD_REQUEST);
         }
+        crypto.setName(crypto.getName().toLowerCase());
         this.addCrypto(crypto);
         return new ResponseEntity<>(postStatus, org.springframework.http.HttpStatus.OK);
     }
@@ -89,7 +90,7 @@ public class CryptoService {
         }
         for (int i = 0; i < this.cryptoList.size(); i++){
             if (this.cryptoList.get(i).getId().equals(id)){
-                this.cryptoList.set(i, new Crypto(crypto.getName(), crypto.getSymbol(), crypto.getQuantity()));
+                this.cryptoList.set(i, new Crypto(crypto.getName().toLowerCase(), crypto.getSymbol(), crypto.getQuantity()));
             }
         }
         HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
