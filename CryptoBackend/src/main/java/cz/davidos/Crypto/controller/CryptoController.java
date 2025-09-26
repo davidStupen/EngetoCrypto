@@ -58,7 +58,7 @@ public class CryptoController {
         }
     }
     @PutMapping("/{id}")
-    public ResponseEntity<HttpStat> updateCrypto(@Valid @RequestBody Crypto crypto, @PathVariable UUID id, BindingResult result){
+    public ResponseEntity<HttpStat> updateCrypto(@Valid @RequestBody Crypto crypto, BindingResult result, @PathVariable UUID id){
         if (result.hasErrors()){
             String error = result.getFieldError().getDefaultMessage();
             HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity(), error);

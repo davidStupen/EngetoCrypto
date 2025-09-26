@@ -70,10 +70,15 @@ public class CryptoService {
 
     public Crypto getCryptoById(UUID id) throws NotFind {
         return this.cryptoList.stream().filter(item -> item.getId().equals(id))
-                .findFirst().orElseThrow(() -> new NotFind("nenalezeno id " + id));
+                .findFirst().orElseThrow(() -> new NotFind("nenalezeno id " + id + ". V seznamu se nic nezměnilo."));
     }
 
     public ResponseEntity<HttpStat> updateCrypto(UUID id, Crypto crypto) {
+        try {
+            this.getCryptoById(id);
+        } catch (NotFind e) {
+            return new ResponseEntity<>(new HttpStat("", "", -1, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
         if (!crypto.getSymbol().equalsIgnoreCase("BTC") &&
                 !crypto.getSymbol().equalsIgnoreCase("ETH") &&
                 !crypto.getSymbol().equalsIgnoreCase("SOL") &&
