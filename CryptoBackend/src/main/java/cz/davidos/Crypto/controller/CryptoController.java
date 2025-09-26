@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/cryptos")
 public class CryptoController {
     private CryptoService service;
@@ -70,7 +69,7 @@ public class CryptoController {
     public TotalValueDTO getTotalValue(){
         try {
             BigDecimal totalValue = this.service.countTotalValue();
-            return new TotalValueDTO("", totalValue);
+            return new TotalValueDTO(null, totalValue);
         } catch (TotalValue e) {
             return new TotalValueDTO(e.getMessage());
         }
