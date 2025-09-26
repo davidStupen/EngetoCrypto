@@ -77,7 +77,7 @@ public class CryptoService {
         try {
             this.getCryptoById(id);
         } catch (NotFind e) {
-            return new ResponseEntity<>(new HttpStat("", "", -1, e.getMessage()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new HttpStat(null, null, -1, e.getMessage()), HttpStatus.NOT_FOUND);
         }
         if (!crypto.getSymbol().equalsIgnoreCase("BTC") &&
                 !crypto.getSymbol().equalsIgnoreCase("ETH") &&
