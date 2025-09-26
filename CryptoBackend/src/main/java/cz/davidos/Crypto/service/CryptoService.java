@@ -4,6 +4,7 @@ import cz.davidos.Crypto.exception.NotFind;
 import cz.davidos.Crypto.exception.TotalValue;
 import cz.davidos.Crypto.model.Crypto;
 import cz.davidos.Crypto.model.HttpStat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -72,13 +73,22 @@ public class CryptoService {
                 .findFirst().orElseThrow(() -> new NotFind("nenalezeno id " + id));
     }
 
-    public void updateCrypto(UUID id, Crypto crypto) {
-        for (int i = 0; i < this.cryptoList.size(); i++) {
-            if (this.cryptoList.get(i).getId().equals(id)) {
+    public ResponseEntity<HttpStat> updateCrypto(UUID id, Crypto crypto) {
+        if (!crypto.getSymbol().equalsIgnoreCase("BTC") &&
+                !crypto.getSymbol().equalsIgnoreCase("ETH") &&
+                !crypto.getSymbol().equalsIgnoreCase("SOL") &&
+                !crypto.getSymbol().equalsIgnoreCase("DOGE")){
+            String err = "symbol musí obsahovat BTC nebo ETH nebo SOL nebo DOGE. Jiná možnost není možna. Nebylo uloženo! Není povoleno: " + crypto.getSymbol();
+            HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity(), err);
+            return new ResponseEntity<>(httpStat, HttpStatus.BAD_REQUEST);
+        }
+        for (int i = 0; i < this.cryptoList.size(); i++){
+            if (this.cryptoList.get(i).getId().equals(id)){
                 this.cryptoList.set(i, new Crypto(crypto.getName(), crypto.getSymbol(), crypto.getQuantity()));
-                break;
             }
         }
+        HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
+        return new ResponseEntity<>(httpStat, HttpStatus.OK);
     }
 
     public BigDecimal countTotalValue() throws TotalValue {

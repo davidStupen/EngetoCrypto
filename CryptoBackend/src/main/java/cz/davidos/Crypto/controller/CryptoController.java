@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -35,7 +34,7 @@ public class CryptoController {
             postStatus.setErr(error);
             return new ResponseEntity<>(postStatus, org.springframework.http.HttpStatus.BAD_REQUEST);
         }
-        return this.service.saveOrException(crypto, postStatus); //interaguje i s listem Crypto, pokud je vše v pořádku.
+        return this.service.saveOrException(crypto, postStatus);
     }
     @GetMapping({"", "/"})
     public List<Crypto> getAllCryptos(@RequestParam(required = false) String sort){
@@ -65,17 +64,7 @@ public class CryptoController {
             HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity(), error);
             return new ResponseEntity<>(httpStat, HttpStatus.BAD_REQUEST);
         }
-        if (!crypto.getSymbol().equalsIgnoreCase("BTC") &&
-                !crypto.getSymbol().equalsIgnoreCase("ETH") &&
-                !crypto.getSymbol().equalsIgnoreCase("SOL") &&
-                !crypto.getSymbol().equalsIgnoreCase("DOGE")){
-            String err = "symbol musí obsahovat BTC nebo ETH nebo SOL nebo DOGE. Jiná možnost není možna. Nebylo uloženo! Není povoleno: " + crypto.getSymbol();
-            HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity(), err);
-            return new ResponseEntity<>(httpStat, HttpStatus.BAD_REQUEST);
-        }
-        this.service.updateCrypto(id, crypto);
-        HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
-        return new ResponseEntity<>(httpStat, HttpStatus.OK);
+        return this.service.updateCrypto(id, crypto);
     }
     @GetMapping("/portfolio-value")
     public TotalValueDTO getTotalValue(){
