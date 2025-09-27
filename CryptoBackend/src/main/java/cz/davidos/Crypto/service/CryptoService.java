@@ -4,6 +4,7 @@ import cz.davidos.Crypto.exception.NotFind;
 import cz.davidos.Crypto.exception.TotalValue;
 import cz.davidos.Crypto.model.Crypto;
 import cz.davidos.Crypto.model.HttpStat;
+import cz.davidos.Crypto.repository.CryptoRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,11 @@ import java.util.UUID;
 
 @Service
 public class CryptoService {
-    List<Crypto> cryptoList = new ArrayList<>();
+    private CryptoRepo repo;
+
+    public CryptoService(CryptoRepo repo) {
+        this.repo = repo;
+    }
 
     public ResponseEntity<HttpStat> saveOrException(Crypto crypto, HttpStat postStatus){
         if (!crypto.getSymbol().equalsIgnoreCase("BTC") &&
@@ -32,46 +37,48 @@ public class CryptoService {
     }
 
     private void addCrypto(Crypto crypto){
-        this.cryptoList.add(new Crypto(crypto.getName(), crypto.getSymbol(), crypto.getQuantity()));
+        this.repo.save(new Crypto(crypto.getName(), crypto.getSymbol(), crypto.getQuantity()));
     }
 
     public List<Crypto> getAllCryptos(){
-        return this.cryptoList;
+        return this.repo.findAll();
     }
 
     public List<Crypto> sortByPrice(){
+        List<Crypto> cryptos = this.repo.findAll();
         Comparator<Crypto> com = (o1, o2) -> {
             if (o1.getPrice().doubleValue() > o2.getPrice().doubleValue()) return 1;
             if (o1.getPrice().doubleValue() < o2.getPrice().doubleValue()) return -1;
             return 0;
         };
-        this.cryptoList.sort(com);
-        return this.cryptoList;
+        cryptos.sort(com);
+        return cryptos;
     }
 
     public List<Crypto> sortByName(){
+        List<Crypto> cryptos = this.repo.findAll();
         Comparator<Crypto> com = (o1, o2) -> {
             if (o1.getName().compareTo(o2.getName()) > 0) return 1;
             if (o1.getName().compareTo(o2.getName()) < 0) return -1;
             return 0;
         };
-        this.cryptoList.sort(com);
-        return this.cryptoList;
+        cryptos.sort(com);
+        return cryptos;
     }
 
     public List<Crypto> sortByQuantity(){
+        List<Crypto> cryptos = this.repo.findAll();
         Comparator<Crypto> com = (o1, o2) -> {
             if (o1.getQuantity() > o2.getQuantity()) return 1;
             if (o1.getQuantity() < o2.getQuantity()) return -1;
             return 0;
         };
-        this.cryptoList.sort(com);
-        return this.cryptoList;
+        cryptos.sort(com);
+        return cryptos;
     }
 
     public Crypto getCryptoById(UUID id) throws NotFind {
-        return this.cryptoList.stream().filter(item -> item.getId().equals(id))
-                .findFirst().orElseThrow(() -> new NotFind("nenalezeno id " + id + ". V seznamu se nic nezměnilo."));
+        return this.repo.findById(id).orElseThrow(() -> new NotFind("nenalezeno id " + id + ". V seznamu se nic nezměnilo."));
     }
 
     public ResponseEntity<HttpStat> updateCrypto(UUID id, Crypto crypto) {
@@ -88,20 +95,16 @@ public class CryptoService {
             HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity(), err);
             return new ResponseEntity<>(httpStat, HttpStatus.BAD_REQUEST);
         }
-        for (int i = 0; i < this.cryptoList.size(); i++){
-            if (this.cryptoList.get(i).getId().equals(id)){
-                this.cryptoList.set(i, new Crypto(crypto.getName().toLowerCase(), crypto.getSymbol(), crypto.getQuantity()));
-                break;
-            }
-        }
+        this.repo.save(crypto);
         HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
         return new ResponseEntity<>(httpStat, HttpStatus.OK);
     }
 
     public BigDecimal countTotalValue() throws TotalValue {
-        if (this.cryptoList.isEmpty()) throw new TotalValue("Tvoje portfolio je zatím prázdné!");
+        if (this.repo.count() == 0) throw new TotalValue("Tvoje portfolio je zatím prázdné!");
         BigDecimal value = BigDecimal.valueOf(0);
-        for (Crypto item : this.cryptoList){
+        List<Crypto> cryptos = this.repo.findAll();
+        for (Crypto item : cryptos){
             value = value.add(BigDecimal.valueOf(item.getQuantity()).multiply(item.getPrice()));
         }
         return value;
