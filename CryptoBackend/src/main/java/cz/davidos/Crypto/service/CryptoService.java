@@ -18,17 +18,25 @@ import java.util.UUID;
 public class CryptoService {
     private List<Crypto> cryptoList = new ArrayList<>();
 
-    public ResponseEntity<HttpStat> saveOrException(Crypto crypto, HttpStat postStatus){
+    private ResponseEntity<HttpStat> checkSymbol(Crypto crypto){
         if (!crypto.getSymbol().equalsIgnoreCase("BTC") &&
                 !crypto.getSymbol().equalsIgnoreCase("ETH") &&
                 !crypto.getSymbol().equalsIgnoreCase("SOL") &&
                 !crypto.getSymbol().equalsIgnoreCase("DOGE")){
-            postStatus.setErr("symbol musí obsahovat BTC nebo ETH nebo SOL nebo DOGE. Jiná možnost není možna. Nebylo uloženo! Není povoleno: " + crypto.getSymbol());
-            return new ResponseEntity<>(postStatus, org.springframework.http.HttpStatus.BAD_REQUEST);
+            String err = "symbol musí obsahovat BTC nebo ETH nebo SOL nebo DOGE. Jiná možnost není možna. Nebylo uloženo! Není povoleno: " + crypto.getSymbol();
+            HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity(), err);
+            return new ResponseEntity<>(httpStat, HttpStatus.BAD_REQUEST);
         }
+        HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
+        return new ResponseEntity<>(httpStat, HttpStatus.OK);
+    }
+
+    public ResponseEntity<HttpStat> saveOrException(Crypto crypto, HttpStat postStatus){
+        ResponseEntity<HttpStat> responseEntity =  this.checkSymbol(crypto);
+        if (!responseEntity.getStatusCode().is2xxSuccessful()) return responseEntity;
         crypto.setName(crypto.getName().toLowerCase());
         this.addCrypto(crypto);
-        return new ResponseEntity<>(postStatus, org.springframework.http.HttpStatus.OK);
+        return responseEntity;
     }
 
     private void addCrypto(Crypto crypto){
@@ -80,22 +88,16 @@ public class CryptoService {
         } catch (NotFind e) {
             return new ResponseEntity<>(new HttpStat(null, null, -1, e.getMessage()), HttpStatus.NOT_FOUND);
         }
-        if (!crypto.getSymbol().equalsIgnoreCase("BTC") &&
-                !crypto.getSymbol().equalsIgnoreCase("ETH") &&
-                !crypto.getSymbol().equalsIgnoreCase("SOL") &&
-                !crypto.getSymbol().equalsIgnoreCase("DOGE")){
-            String err = "symbol musí obsahovat BTC nebo ETH nebo SOL nebo DOGE. Jiná možnost není možna. Nebylo uloženo! Není povoleno: " + crypto.getSymbol();
-            HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity(), err);
-            return new ResponseEntity<>(httpStat, HttpStatus.BAD_REQUEST);
-        }
+        ResponseEntity<HttpStat> responseEntity = this.checkSymbol(crypto);
+        if (!responseEntity.getStatusCode().is2xxSuccessful()) return responseEntity;
+
         for (int i = 0; i < this.cryptoList.size(); i++){
             if (this.cryptoList.get(i).getId().equals(id)){
                 this.cryptoList.set(i, new Crypto(crypto.getName().toLowerCase(), crypto.getSymbol(), crypto.getQuantity()));
                 break;
             }
         }
-        HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
-        return new ResponseEntity<>(httpStat, HttpStatus.OK);
+        return responseEntity;
     }
 
     public BigDecimal countTotalValue() throws TotalValue {
