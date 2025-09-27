@@ -4,16 +4,25 @@ import cz.davidos.Crypto.model.bitcoin.BitcoinDTO;
 import cz.davidos.Crypto.model.dogecoin.DogeCoinDTO;
 import cz.davidos.Crypto.model.ethereum.EthereumDTO;
 import cz.davidos.Crypto.model.solana.SolanaDTO;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
+@NoArgsConstructor
+@Entity
 public class Crypto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @NotEmpty(message = "jmeno je povinný")
     private String name;
@@ -24,7 +33,6 @@ public class Crypto {
     private double quantity;
 
     public Crypto(String name, String symbol, double quantity) {
-        this.id = UUID.randomUUID();
         this.name = name;
         this.symbol = symbol;
         this.price = this.currentPrice(symbol);
