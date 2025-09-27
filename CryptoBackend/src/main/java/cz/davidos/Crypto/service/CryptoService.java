@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Service
 public class CryptoService {
-    List<Crypto> cryptoList = new ArrayList<>();
+    private List<Crypto> cryptoList = new ArrayList<>();
 
     public ResponseEntity<HttpStat> saveOrException(Crypto crypto, HttpStat postStatus){
         if (!crypto.getSymbol().equalsIgnoreCase("BTC") &&
