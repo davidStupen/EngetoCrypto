@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -95,7 +94,9 @@ public class CryptoService {
             HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity(), err);
             return new ResponseEntity<>(httpStat, HttpStatus.BAD_REQUEST);
         }
-        this.repo.save(crypto);
+        Crypto crypto1 = new Crypto(crypto.getName().toLowerCase(), crypto.getSymbol(), crypto.getQuantity());
+        crypto1.setId(id);
+        this.repo.save(crypto1);
         HttpStat httpStat = new HttpStat(crypto.getName(), crypto.getSymbol(), crypto.getQuantity());
         return new ResponseEntity<>(httpStat, HttpStatus.OK);
     }
